@@ -8,15 +8,15 @@ library(RMariaDB)
 library(lubridate)
 
 # read data files ----
-# Run query to append table from dataframe
-con <- RMariaDB::dbConnect(RMariaDB::MariaDB(), group = "linode")
-res <- RMariaDB::dbSendQuery(con, "SELECT CAST(datePub AS DATE) `pub` FROM text")
-df <- data.table::as.data.table(RMariaDB::dbFetch(res))
 # Connect to my-db as defined in ~/.my.cnf
 # con <- dbConnect(RMariaDB::MariaDB(), group = "my-db")
-RMariaDB::dbClearResult(res)
+con <- RMariaDB::dbConnect(RMariaDB::MariaDB(), group = "linode")
 
 # query today news ----
+res <- RMariaDB::dbSendQuery(con, "SELECT CAST(datePub AS DATE) `pub` FROM text")
+df <- data.table::as.data.table(RMariaDB::dbFetch(res))
+RMariaDB::dbClearResult(res)
+
 rs <- RMariaDB::dbSendQuery(con, "SELECT CAST(datePub AS DATE) `pub`, src FROM text WHERE datepub = CURDATE()")
 dr <- data.table::as.data.table(RMariaDB::dbFetch(rs))
 
@@ -27,6 +27,7 @@ RMariaDB::dbDisconnect(con)
 # Summary 
 # df %>% group_by(year(pub)) %>% count()
 df[,.N,year(pub)]
+
 # df %>% filter(year(pub) == 2021) %>% 
 #   group_by(month(pub))  %>% 
 #   count()
