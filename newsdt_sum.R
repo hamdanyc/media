@@ -4,7 +4,6 @@
 
 # init ----
 library(data.table)
-library(RMariaDB)
 library(lubridate)
 
 # read data files ----
@@ -17,11 +16,11 @@ res <- RMariaDB::dbSendQuery(con, "SELECT CAST(datePub AS DATE) `pub` FROM text"
 df <- data.table::as.data.table(RMariaDB::dbFetch(res))
 RMariaDB::dbClearResult(res)
 
-rs <- RMariaDB::dbSendQuery(con, "SELECT CAST(datePub AS DATE) `pub`, src FROM text WHERE datepub = CURDATE()")
-dr <- data.table::as.data.table(RMariaDB::dbFetch(rs))
+# rs <- RMariaDB::dbSendQuery(con, "SELECT CAST(datePub AS DATE) `pub`, src FROM text WHERE datepub = CURDATE()")
+# dr <- data.table::as.data.table(RMariaDB::dbFetch(rs))
+# RMariaDB::dbClearResult(rs)
 
 #  disconnect db ----
-RMariaDB::dbClearResult(rs)
 RMariaDB::dbDisconnect(con)
 
 # Summary 
@@ -33,6 +32,6 @@ df[,.N,year(pub)]
 #   count()
 df[year(pub) == year(today()),.N,month(pub)]
 df[year(pub) == year(today()) & month(pub) == month(today()),.N,day(pub)]
-dr[,.N,src]
+#dr[,.N,src]
 # df %>% filter(pub == today()) %>% count()
 df[,.N]

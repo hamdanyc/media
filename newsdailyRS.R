@@ -19,7 +19,7 @@ news.my <- c("agendadaily","amanahdaily","airtimes","antarapos","astroawani","am
 
 
 # server rselenium ----
-remDr <- RSelenium::remoteDriver(remoteServerAddr = "192.168.1.123",
+remDr <- RSelenium::remoteDriver(remoteServerAddr = "192.168.1.116",
                                  port = 4444L,
                                  browserName = "firefox")
 

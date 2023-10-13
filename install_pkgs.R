@@ -1,32 +1,15 @@
 # install_pkgs.R
 # prep list
-# awk '/library/' *.R | sort | uniq -u > pkgs.txt
+# awk '/library/' *.R | sort | uniq > pkgs.txt
 
-pkgs <- c("rvest",
-          "dplyr",
-          "devtools",
-          "data.table",
-          "tidytext",
-          "tidyr",
-          "readr",
-          "stringr",
-          "DBI",
-          "lubridate",
-          "stringr",
-          "ggplot2",
-          "wordcloud",
-          "RColorBrewer",
-          "RTextTools",
-          "rmarkdown",
-          "DT",
-          "RMariaDB",
-          "kableExtra",
-          "knitr")
+library(readr)
+
+pkgs <- readr::read_lines("pkgs")
 
 install.packages(pkgs)
 
 # wordvector package
-devtools::install_github("bmschmidt/wordVectors")
+# devtools::install_github("bmschmidt/wordVectors")
 
 # Note: ubuntu packages required for:
 # .. package rvest

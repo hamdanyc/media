@@ -1,0 +1,12 @@
+name: newsdb
+title: newsdb
+username:
+account: hamdan-yaccob
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6362001
+bundleId: 7799660
+url: https://hamdan-yaccob.shinyapps.io/newsdb/
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: app_bak.R|app_old.R|newsdb.RData

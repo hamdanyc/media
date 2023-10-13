@@ -50,4 +50,4 @@ therakyatpost.df <- tibble(src, datePub, headlines, newslink, article)
 
 # calc sentiment & insert db ----
 df <- therakyatpost.df
-if(batch) source("call_sentmnt.R")
+# if(batch) source("call_sentmnt.R")

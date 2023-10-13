@@ -9,7 +9,9 @@ url <- "https://www.astroawani.com/berita-malaysia"
 remDr$navigate(url = url) # Entering our URL
 
 # click more element
+Sys.sleep(3)
 clickElem <- remDr$findElement(using = "css", "[class = 'css-1eivwdj']")
+Sys.sleep(2)
 clickElem$clickElement()
 
 headlines <- xml2::read_html(remDr$getPageSource()[[1]]) %>%
