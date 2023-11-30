@@ -48,7 +48,7 @@ for(i in 1:no.links){
   if(error) break
   txt <- gsub('\\n', ' ', txt)
   txt <- paste(txt, collapse = ' ')
-  article[i] = txt
+  article[i] = gsub('-- BERNAMA.*$',"",txt)
   j <- j + 1
   # update progress bar
   setTxtProgressBar(pb, j)
@@ -61,5 +61,4 @@ bernama.df <- tibble(src, datePub, headlines, newslink, article) %>%
 
 # calc sentiment & insert db ----
 df <- bernama.df
-if(batch) source("call_sentmnt.R")
 bernama.df <- df
