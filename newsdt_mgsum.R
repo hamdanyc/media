@@ -4,12 +4,17 @@
 library(data.table)
 library(dplyr)
 library(mongolite)
+library(lubridate)
 
 # connect db ----
 # This is the connection_string. You can get the exact url from your MongoDB cluster screen
 # mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]
-connection_string = readLines(con=".url.txt")
-db <- mongo(collection="media", db="news", url=connection_string)
+# connection_string = readLines(con="~/media/.url.txt")
+USER_ID <- Sys.getenv("USER_ID")
+PASSWORD <- Sys.getenv("PASSWORD")
+DB_SVR <- Sys.getenv("DB_SVR")
+url <- paste0("mongodb://", USER_ID, ":", PASSWORD, "@", DB_SVR)
+db <- mongo(collection="media", db="news", url=url)
 
 # query today news ----
 res <- db$find(fields = '{"datePub": 1}')
