@@ -83,7 +83,6 @@ batch <- FALSE
 thenews <- c("airtimes",
              "bernama",
              "borneopost",
-             "dailyexpress", 
              "fmt",
              "harakah",
              "kosmo",

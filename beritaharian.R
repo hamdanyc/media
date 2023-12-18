@@ -33,6 +33,7 @@ pb <- txtProgressBar(min = 0, max = n, style = 3)
 for (i in 1:n) {
   txt <- ""
   remDr$navigate(newslink[i])
+  Sys.sleep(2)
   tryCatch(txt <- xml2::read_html(remDr$getPageSource()[[1]]) %>%
              rvest::html_elements("p") %>%
              rvest::html_text2(), error = function(e) e)
@@ -40,7 +41,6 @@ for (i in 1:n) {
   txt <- paste(txt, collapse = ' ')
   article[i] <- txt
   j <- j + 1
-  Sys.sleep(2)
   # update progress bar
   setTxtProgressBar(pb, j)
 }
