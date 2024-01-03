@@ -14,11 +14,12 @@ library(lubridate)
 # PASSWORD <- Sys.getenv("PASSWORD")
 # DB_SVR <- Sys.getenv("DB_SVR")
 
-URL <- Sys.getenv("URL")
-db <- mongo(collection="media", db="news", url=URL)
+url <- Sys.getenv("URL")
+db <- mongo(collection="media", db="news", url=url)
 
 # query today news ----
-res <- db$find(fields = '{"datePub": 1}')
+# res <- db$find(fields = '{"datePub": 1}')
+res <- db$find('{"datePub": {"$regex": "2024"}}')
 res$pub <- as.Date(res$datePub)
 df <- data.table::as.data.table(res)
 
