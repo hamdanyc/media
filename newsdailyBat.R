@@ -155,7 +155,7 @@ if(nrow(news.today) > 0){
 }
 
 # housekeeping
-if (nrow(news.last) > 3500) {
+if (nrow(news.last) > 144000) {
   news.last <- news.today %>% 
     select(src, headlines)
 }
