@@ -8,11 +8,11 @@ library(dplyr)
 theNews <- read_html("http://www.sinarharian.com.my/nasional")
 
 headlines <- theNews %>%
-  html_nodes(".description-2") %>%
+  html_nodes(".article-title") %>%
   html_text2()
 
 newslink <- theNews %>%
-  html_nodes(".description-2") %>%
+  html_nodes(".article-title a") %>%
   html_attr("href")
 
 # set var
@@ -32,6 +32,7 @@ pb <- txtProgressBar(min = 0, max = no.links, style = 3)
 for(i in 1:nrow(newslink)){
   Sys.sleep(0.7)
   txt <- ""
+  article[i] <- ""
   tryCatch(txt <- read_html(newslink$newslink[i]) %>%
              html_nodes("p") %>%
              html_text2(),error = function(e) e)
@@ -50,4 +51,3 @@ sinarharian.df <- tibble(src, datePub, headlines, newslink, article)
 
 # calc sentiment & insert db ----
 df <- sinarharian.df
-if(batch) source("call_sentmnt.R")
