@@ -19,7 +19,7 @@ db <- mongo(collection="media", db="news", url=url)
 
 # query today news ----
 # res <- db$find(fields = '{"datePub": 1}')
-res <- db$find('{"datePub": {"$regex": "2024"}}', fields = '{"datePub": 1}')
+res <- db$find('{"datePub": {"$regex": "2025"}}', fields = '{"datePub": 1}')
 res$pub <- as.Date(res$datePub)
 df <- data.table::as.data.table(res)
 
@@ -38,6 +38,3 @@ df[year(pub) == year(today()) & month(pub) == month(today()),.N,day(pub)]
 #dr[,.N,src]
 # df %>% filter(pub == today()) %>% count()
 df[,.N]
-
-
-

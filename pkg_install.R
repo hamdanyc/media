@@ -1,4 +1,4 @@
-# packR.R
+# pkg_install.R
 
 library(pak)
 library(dplyr)

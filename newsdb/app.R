@@ -15,15 +15,19 @@ db <- mongo(collection="media", db="news", url=connection_string)
 
 ui <- fluidPage(
   checkboxInput("kyw", "by keyword?", FALSE),
-  textInput("tkey", "Enter the keyword:", value = "%veteran%tentera%"),
+  textInput("tkey", "Enter the keyword:", value = "atm "),
   textInput("date1", "Date:", value = format(Sys.Date(),"%Y/%m/%d")),
   DT::dataTableOutput("tbl")
 )
 
 server <- function(input, output, session) {
+
   output$tbl <- DT::renderDataTable({
+    if (input$kyw == TRUE) 
+        query <- paste0('{"article": {"$regex": ".', input$tkey, '.","$options" : "i"} }')
+    else 
     query <- paste0('{ "datePub" : "',input$date1 , '"}')
-    res <- db$find(query=query,fields = '{"_id": 0, "newslink": 0}',limit = 2500)
+    res <- db$find(query=query,fields = '{"_id": 0, "headlines": 1, "src" : 1, "article": 1}',limit = 500)
   }, options = list(searchHighlight = TRUE))
 }
 

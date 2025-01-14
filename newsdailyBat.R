@@ -126,7 +126,7 @@ list.news <- c("agendadaily.df",
              "theedge.df",
              "themalaymailonline.df",
              "therakyatpost.df", 
-             "theStar.df",
+             "thestar.df",
              "thesundaily.df",
              "umnoonline.df",
              "utusan.df")

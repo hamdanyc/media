@@ -5,7 +5,7 @@ library(rvest)
 library(dplyr)
 
 # Read html ----
-theNews <- read_html("https://www.thesundaily.my/local")
+theNews <- read_html("https://thesun.my/malaysia-news")
 
 headlines <- theNews %>%
   html_nodes(".headline h2") %>%
@@ -16,7 +16,7 @@ newslink <- theNews %>%
   html_attr("href")
 
 # set var
-url <- "https://www.thesundaily.my"
+url <- "https://thesun.my/malaysia-news"
 headlines <- unlist(headlines)
 newslink <- unlist(newslink)
 newslink <- paste0(url,newslink)
