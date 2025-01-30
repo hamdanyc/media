@@ -1,10 +1,10 @@
 # newsBatch.R
 
-setwd("~/media")
+setwd("/home/rstudio/media")
 .libPaths(c("~/R/x86_64-pc-linux-gnu-library/3.6","/usr/local/lib/R/site-library"))
 
-# run.lst <- c("newsdailyBat.R", "newsDailyKPIVer2.R", "newsRdr.R", "newsMail.R")
-run.lst <- c("newsdailyBat.R","newsadddb_mongo.R", "newsRdr.R")
+# run.lst <- c("newsdailyBat.R", "newsadddb_mongo.R"", "newsRdr.R", "newsMail.R")
+run.lst <- c("newsdailyBat.R", "newsRdr.R")
 
 try(
   for (i in run.lst) {

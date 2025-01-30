@@ -5,20 +5,20 @@
 # init ----
 library(dplyr)
 library(mongolite)
-load("newsdaily.RData")
+# load("/home/rstudio/media/newsdaily.RData") | expunged
 
 # connect db ----
-# This is the connection_string. You can get the exact url from your MongoDB cluster screen
-# mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]
-# connection_string = readLines(con="~/media/.url.txt")
-USER_ID <- Sys.getenv("USER_ID")
-PASSWORD <- Sys.getenv("PASSWORD")
-DB_SVR <- Sys.getenv("DB_SVR")
-url <- paste0("mongodb://", USER_ID, ":", PASSWORD, "@", DB_SVR)
-db <- mongo(collection="media", db="news", url=url)
+uri <- Sys.getenv("URI")
+db <- mongo(collection="media", db="news", url=uri)
 
-# insert doc ----
+# insert newsdaily.RData.RData ----
 # Run query to append table from dataframe
 db$insert(news.today)
+
+#  disconnect db ----
+db$disconnect()
+
+
+
 
 

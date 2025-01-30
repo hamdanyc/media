@@ -1,5 +1,5 @@
 # newsdailyBat.R
-# origin from newsdaily2.R
+# output: news.today news.last
 # schedule at 0700 every day
 
 # Problems:
@@ -18,10 +18,17 @@
 # init -----
 library(dplyr)
 library(RTextTools)
-load("newsdaily.RData")
+library(mongolite)
+
 options(verbose=FALSE)
 load("binmy.RData")
 load("news_model.RData")
+
+# load news.last from db ----
+# load("newsdaily.RData") | for news.last
+uri <- Sys.getenv("URI")
+db <- mongo(collection="news_last", db="news", url=uri)
+news.last <- db$find('{}')
 
 news.eng <- c("nst", "thestar", "theedge", "dailyexpress","malaysiainsight", "malaysiachronicle","malaysiakini",
               "malaysiandigest", "sinchew","themalaymailonline", "thesundaily","malaysianow","newsarawaktribune",
@@ -140,25 +147,31 @@ for (i in thenews) {
 # news part II (rselenium) ----
 try(source("news_rs_part.R"),silent = TRUE)
 
-# Media clean up ----
+# Media clean up, and news.today ----
 news.list <- lapply(list.news, e)
 news.today <- data.table::rbindlist(news.list,fill = TRUE) %>% distinct()
-
-# append to news.last
 news.today <- news.today %>% 
   dplyr::anti_join(news.last)
 
 if(nrow(news.today) > 0){
-  news.last <- news.today %>% 
+  
+  # save news.last to db ----
+  news.today %>% 
     select(src, headlines) %>% 
-    bind_rows(news.last)
+    db$insert()
+  
+  # insert news.today | append news.last ----
+  try(source("newsadddb_mongo.R"),silent = TRUE)
 }
 
-# housekeeping
+# housekeeping yearly avg | init news.last ----
 if (nrow(news.last) > 144000) {
-  news.last <- news.today %>% 
-    select(src, headlines)
+  db <- mongo(collection="news_last", db="news", url=uri)
+  db$remove('{}')
+  news.today %>% 
+    select(src, headlines) %>% 
+    db$insert()
 }
 
-save(file = "newsdaily.RData", news.today, news.last)
+# prev: save(file = "newsdaily.RData", news.today, news.last)
 # system("cp /home/abi/media/newsdaily.RData /home/abi/data") # cp to /mnt/nfsdir

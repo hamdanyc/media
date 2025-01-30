@@ -18,11 +18,19 @@ options(
 library(dplyr)
 library(knitr)
 library(kableExtra)
+library(mongolite)
+library(jsonlite)
 
-load("newsdaily.RData") # news.today from newsdailyBat.R
-
+# load news.last from db ----
+# load("newsdaily.RData") | expunged
 options(digits=2)
-
+uri <- Sys.getenv("URI")
+db <- mongo(collection="media", db="news", url=uri)
+dt <- lubridate::today(tz="Asia/Kuala_Lumpur") %>% 
+  format("%Y/%m/%d")
+data <- list("datePub" = dt)
+q <- toJSON(data,auto_unbox = TRUE)
+news.today <- db$find(q)
 ```
 ```{r Function word.tag, message=FALSE, warning=FALSE, include=FALSE}
 word.idx <- function(src.txt, src.key){

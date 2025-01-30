@@ -7,15 +7,15 @@ library(mongolite)
 library(lubridate)
 
 # connect db ----
-# This is the connection_string. You can get the exact url from your MongoDB cluster screen
+# This is the connection_string. You can get the exact uri from your MongoDB cluster screen
 # mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]
-# connection_string = readLines(con="~/media/.url.txt")
+# connection_string = readLines(con="~/media/.uri.txt")
 # USER_ID <- Sys.getenv("USER_ID")
 # PASSWORD <- Sys.getenv("PASSWORD")
 # DB_SVR <- Sys.getenv("DB_SVR")
 
-url <- Sys.getenv("URL")
-db <- mongo(collection="media", db="news", url=url)
+uri <- Sys.getenv("URI")
+db <- mongo(collection="media", db="news", url=uri)
 
 # query today news ----
 # res <- db$find(fields = '{"datePub": 1}')
