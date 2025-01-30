@@ -5,7 +5,7 @@ account: hamdan-yaccob
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6362001
-bundleId: 7799660
+bundleId: 9615958
 url: https://hamdan-yaccob.shinyapps.io/newsdb/
 asMultiple: FALSE
 asStatic: FALSE
