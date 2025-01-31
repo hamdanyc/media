@@ -1,0 +1,9 @@
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+]0;/home/rstudio[?2004hrstudio@cd02dd3cc384:~$ [Krstudio@cd02dd3cc384:~$ pwd
+[?2004l/home/rstudio
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+]0;/home/rstudio[?2004hrstudio@cd02dd3cc384:~$ 

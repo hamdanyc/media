@@ -1,0 +1,18 @@
+1736743035898:# newsdt_mgsum.R
+1736743035900:# init ----
+1736743035904:library(data.table)
+1736743035933:library(dplyr)
+1736743035999:library(mongolite)
+1736743036054:library(lubridate)
+1736743036566:# connect db ----
+1736743036567:# This is the connection_string. You can get the exact url from your MongoDB cluster screen
+1736743036567:# mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]
+1736743036568:# connection_string = readLines(con="~/media/.url.txt")
+1736743036569:# USER_ID <- Sys.getenv("USER_ID")
+1736743036569:# PASSWORD <- Sys.getenv("PASSWORD")
+1736743036570:# DB_SVR <- Sys.getenv("DB_SVR")
+1736743036571:url <- Sys.getenv("URL")
+1736743036571:db <- mongo(collection="media", db="news", url=url)
+1736755968836:source("~/newsdt_mgsum.R")
+1736756099356:source("~/newsdt_mgsum.R")
+1736756123129:source("~/newsdt_mgsum.R")

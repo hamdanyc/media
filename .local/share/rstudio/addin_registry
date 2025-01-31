@@ -1,0 +1,227 @@
+{
+    "clipr::clipr_output": {
+        "name": "Output to clipboard",
+        "package": "clipr",
+        "title": "",
+        "description": "Copies the console output of a selected expression to the system clipboard",
+        "interactive": false,
+        "binding": "clipr_output",
+        "ordinal": 20
+    },
+    "clipr::clipr_result": {
+        "name": "Value to clipboard",
+        "package": "clipr",
+        "title": "",
+        "description": "Copies the results of a selected expression to the system clipboard",
+        "interactive": false,
+        "binding": "clipr_result",
+        "ordinal": 19
+    },
+    "devtools::document": {
+        "name": "Document a package",
+        "package": "devtools",
+        "title": "",
+        "description": "A wrapper for `roxygen`'s `roxygen2::roxygenize()`",
+        "interactive": true,
+        "binding": "document",
+        "ordinal": 24
+    },
+    "devtools::run_examples": {
+        "name": "Run examples",
+        "package": "devtools",
+        "title": "",
+        "description": "Runs R code in examples using `devtools::run_examples()`",
+        "interactive": true,
+        "binding": "run_examples",
+        "ordinal": 25
+    },
+    "devtools::test_active_file": {
+        "name": "Run a test file",
+        "package": "devtools",
+        "title": "",
+        "description": "Run the current test file, using `devtools::test_active_file()`.",
+        "interactive": true,
+        "binding": "test_active_file",
+        "ordinal": 21
+    },
+    "devtools::test_coverage": {
+        "name": "Report test coverage for a package",
+        "package": "devtools",
+        "title": "",
+        "description": "Calculate and report the test coverage for the current package, using `devtools::test_coverage()`.",
+        "interactive": true,
+        "binding": "test_coverage",
+        "ordinal": 23
+    },
+    "devtools::test_coverage_active_file": {
+        "name": "Report test coverage for a file",
+        "package": "devtools",
+        "title": "",
+        "description": "Calculate and report test coverage for the current test file, using `devtools::test_coverage_active_file()`.",
+        "interactive": true,
+        "binding": "test_coverage_active_file",
+        "ordinal": 22
+    },
+    "esquisse::esquisser": {
+        "name": "'ggplot2' builder",
+        "package": "esquisse",
+        "title": "",
+        "description": "Explore your data with 'ggplot2'.",
+        "interactive": true,
+        "binding": "esquisser",
+        "ordinal": 2
+    },
+    "esquisse::ggplot_to_ppt": {
+        "name": "Export 'ggplot2' plots to 'PowerPoint'",
+        "package": "esquisse",
+        "title": "",
+        "description": "Export 'ggplot2' plots to 'PowerPoint'.",
+        "interactive": true,
+        "binding": "ggplot_to_ppt",
+        "ordinal": 3
+    },
+    "golem::go_to_app_server": {
+        "name": "Open app_server.R",
+        "package": "golem",
+        "title": "",
+        "description": "Opens the app_server.R file.",
+        "interactive": false,
+        "binding": "go_to_app_server",
+        "ordinal": 14
+    },
+    "golem::go_to_app_ui": {
+        "name": "Open app_ui.R",
+        "package": "golem",
+        "title": "",
+        "description": "Opens the app_ui.R file.",
+        "interactive": false,
+        "binding": "go_to_app_ui",
+        "ordinal": 13
+    },
+    "golem::go_to_deploy": {
+        "name": "Open deploy.R",
+        "package": "golem",
+        "title": "",
+        "description": "Opens the 03_deploy.R file.",
+        "interactive": false,
+        "binding": "go_to_deploy",
+        "ordinal": 11
+    },
+    "golem::go_to_dev": {
+        "name": "Open dev.R",
+        "package": "golem",
+        "title": "",
+        "description": "Opens the 02_dev.R file.",
+        "interactive": false,
+        "binding": "go_to_dev",
+        "ordinal": 10
+    },
+    "golem::go_to_run_app": {
+        "name": "Open run_app.R",
+        "package": "golem",
+        "title": "",
+        "description": "Opens the run_app.R file.",
+        "interactive": true,
+        "binding": "go_to_run_app",
+        "ordinal": 15
+    },
+    "golem::go_to_run_dev": {
+        "name": "Open run_dev.R",
+        "package": "golem",
+        "title": "",
+        "description": "Opens the run_dev.R file.",
+        "interactive": false,
+        "binding": "go_to_run_dev",
+        "ordinal": 12
+    },
+    "golem::go_to_start": {
+        "name": "Open start.R",
+        "package": "golem",
+        "title": "",
+        "description": "Opens the 01_start.R file.",
+        "interactive": false,
+        "binding": "go_to_start",
+        "ordinal": 9
+    },
+    "golem::insert_ns": {
+        "name": "Put selected text into between ns()",
+        "package": "golem",
+        "title": "",
+        "description": "add 'ns(' in front of selected text, and add ')' behind.",
+        "interactive": false,
+        "binding": "insert_ns",
+        "ordinal": 16
+    },
+    "golem::run_dev": {
+        "name": "Run run_dev.R",
+        "package": "golem",
+        "title": "",
+        "description": "Runs the run_dev.R file.",
+        "interactive": true,
+        "binding": "run_dev",
+        "ordinal": 17
+    },
+    "pkgdown::build_site": {
+        "name": "Build full site",
+        "package": "pkgdown",
+        "title": "",
+        "description": "Build website for current package",
+        "interactive": true,
+        "binding": "build_site",
+        "ordinal": 4
+    },
+    "renv::renv_addins_embed": {
+        "name": "Embed a Lockfile",
+        "package": "renv",
+        "title": "",
+        "description": "Embeds a lockfile in the document, via renv::use().",
+        "interactive": false,
+        "binding": "renv_addins_embed",
+        "ordinal": 18
+    },
+    "shinyuieditor::launch_editor_addin": {
+        "name": "Run ShinyUiEditor",
+        "package": "shinyuieditor",
+        "title": "",
+        "description": "Start ShinyUiEditor on the currently active app file. If no app present will show template chooser.",
+        "interactive": true,
+        "binding": "launch_editor_addin",
+        "ordinal": 1
+    },
+    "styler::set_style_transformers": {
+        "name": "Set style",
+        "package": "styler",
+        "title": "",
+        "description": "Prompt for and set the style transformers used by all styler addins",
+        "interactive": true,
+        "binding": "set_style_transformers",
+        "ordinal": 5
+    },
+    "styler::style_active_file": {
+        "name": "Style active file",
+        "package": "styler",
+        "title": "",
+        "description": "Pretty-print active file",
+        "interactive": true,
+        "binding": "style_active_file",
+        "ordinal": 7
+    },
+    "styler::style_active_pkg": {
+        "name": "Style active package",
+        "package": "styler",
+        "title": "",
+        "description": "Pretty-print active package",
+        "interactive": true,
+        "binding": "style_active_pkg",
+        "ordinal": 8
+    },
+    "styler::style_selection": {
+        "name": "Style selection",
+        "package": "styler",
+        "title": "",
+        "description": "Pretty-print selection",
+        "interactive": true,
+        "binding": "style_selection",
+        "ordinal": 6
+    }
+}
