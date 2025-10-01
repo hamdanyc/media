@@ -6,7 +6,7 @@ library(dplyr)
 
 # get news info ----
 # get url 
-remDr$navigate(url = "https://www.agendadaily.com/politik/")
+remDr$navigate(url = "https://www.agendadaily.my/isu-semasa")
 Sys.sleep(3)
 headlines <- xml2::read_html(remDr$getPageSource()[[1]]) %>%
   rvest::html_elements("div.unit.post") %>%
@@ -50,4 +50,4 @@ agendadaily.df <- tibble(src, datePub, headlines, newslink, article)
 
 # calc sentiment & insert db ----
 df <- agendadaily.df
-if(batch) source("call_sentmnt.R")
+# if(batch) source("call_sentmnt.R")
