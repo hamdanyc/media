@@ -1,7 +1,7 @@
 # news_rs_part.R
 
 # server rselenium ----
-remDr <- RSelenium::remoteDriver(remoteServerAddr = "192.168.1.116",
+remDr <- RSelenium::remoteDriver(remoteServerAddr = "172.17.0.3",
                                  port = 4444L,
                                  browserName = "firefox")
 
@@ -23,4 +23,4 @@ for (i in rsnews) {
 
 # close rselenium server----
 remDr$close()
-remDr$closeServer()
+# remDr$closeServer()

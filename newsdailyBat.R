@@ -21,8 +21,8 @@ library(RTextTools)
 library(mongolite)
 
 options(verbose=FALSE)
-load("binmy.RData")
-load("news_model.RData")
+load("~/media/binmy.RData")
+load("~/media/news_model.RData")
 
 # load news.last from db ----
 # load("newsdaily.RData") | for news.last

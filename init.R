@@ -10,7 +10,11 @@ library(dplyr)
 # remDr <- rD[["client"]]
 # remDr$getStatus() # check server status
 
-remDr <- rsDriver(browser = "phantomjs")
+remDr <- remoteDriver(
+  remoteServerAddr = "172.17.0.3",
+  port = 4444L,
+  browserName = "firefox"
+)
 remDr$open()
 remDr$navigate("http://www.google.com/ncr")
 remDr$close()
