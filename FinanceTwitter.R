@@ -50,4 +50,4 @@ financetwitter.df <- tibble(src, datePub, headlines, newslink, article)
 
 # calc sentiment & insert db ----
 df <- financetwitter.df
-if(batch) source("call_sentmnt.R")
+# if(batch) source("call_sentmnt.R")
