@@ -8,11 +8,11 @@ library(dplyr)
 theNews <- read_html("https://www.freemalaysiatoday.com/category/category/nation/")
 
 headlines <- theNews %>%
-  html_nodes(".td_module_wrap .entry-title a") %>%
-  html_texts()
+  html_nodes("h3.text-lg") %>% 
+  html_text()
 
 newslink <- theNews %>%
-  html_nodes(".td_module_wrap .entry-title a") %>%
+  html_nodes("a.text-sm") %>%
   html_attr("href")
 
 # set var
