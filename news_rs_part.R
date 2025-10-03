@@ -1,7 +1,7 @@
 # news_rs_part.R
 
 # server rselenium ----
-remDr <- RSelenium::remoteDriver(remoteServerAddr = "172.17.0.3",
+remDr <- RSelenium::remoteDriver(remoteServerAddr = "172.17.0.2",
                                  port = 4444L,
                                  browserName = "firefox")
 

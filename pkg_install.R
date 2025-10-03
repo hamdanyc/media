@@ -4,9 +4,9 @@ library(pak)
 library(dplyr)
 
 # read from file
-p <- read.csv("pkgs.txt") %>% unlist()
+p <- read.csv("pkgs_news.txt") %>% unlist()
 
 # show dependencies
-pkg_deps_tree(p)
-pkg_status(p)
+tr <- pkg_deps_tree(p)
+st <- pkg_status(p)
 pkg_install(p)
