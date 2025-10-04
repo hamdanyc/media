@@ -20,6 +20,7 @@ library(dplyr)
 library(RTextTools)
 library(mongolite)
 
+setwd("~/media")
 options(verbose=FALSE)
 load("~/media/binmy.RData")
 load("~/media/news_model.RData")
