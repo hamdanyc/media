@@ -17,7 +17,7 @@ rsnews <- c("agendadaily",
 n <- 0
 for (i in rsnews) {
   cat(i,fill = TRUE,sep = " ")
-  try(source(paste0("~/media/",i,".R")),
+  try(source(paste0(i,".R")),
       silent=TRUE)
 }
 
