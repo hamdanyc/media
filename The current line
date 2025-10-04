@@ -1,0 +1,1 @@
+active_files=$(grep -oP 'thenews <- c\K.*' newsdailyBat.R | grep -oP '"\K[^"]+')

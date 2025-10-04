@@ -1,3 +1,3 @@
 cd /home/abi/media
-Rscript newsDailyBat.R
+Rscript newsdailyBat.R
 Rscript newsRdr.R

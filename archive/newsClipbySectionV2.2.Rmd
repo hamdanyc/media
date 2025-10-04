@@ -1,0 +1,334 @@
+---
+title: "Petikan Kandungan Media"
+author: "BSPP Gerak Saraf, Tim ICT BPA-JRP"
+date: '`r format(Sys.time(), "%B %d, %Y, %H:%M")`'
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = NA, echo = FALSE)
+options(
+  knitr.kable.NA = '',
+  knitr.table.format = "html",
+  figcap.prefix = "Rajah", figcap.sep = ":",
+  figcap.prefix.highlight = "**",
+  tabcap.prefix = "Jadual", tabcap.sep = ":",
+  tabcap.prefix.highlight = "**"
+  ) 
+```
+```{r initialise, include=FALSE}
+
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(stringr)
+
+load("daily.RData")
+load("newsdaily.RData") # news.today from newsdailyBat.R
+load("media.RData")     # lists of KIC::espn
+options(digits=3)
+
+```
+```{r Function word.idx, message=FALSE, warning=FALSE, include=FALSE}
+word.idx <- function(src.txt, src.key){
+  for(i in 1:nrow(src.txt)){
+  j <- regexpr(paste(src.key, collapse = '|' ), src.txt[i,]) 
+  k <- attr(j,"match.length")
+  x[i,1] <- j
+  x[i,2] <- k
+  x[i,3] <- substr(src.txt[i,],j,k+j)
+  # tmp.txt[i] <- paste(substr(some.txt,1,j-1), ">>",substr(some.txt,j,35))
+  }
+  return(x)
+}
+```
+```{r definition, message=FALSE, warning=FALSE, include=FALSE}
+
+def.key <- espn %>% 
+  filter(kategori == "Keselamatan") %>% 
+  select(word)
+
+crime.key <- c("samun", "curi ", "steal",
+    "culik",  "kidnap",  "rusuh",  "robber",  "rompak",
+    "leweng",  "felon",  "senjata",  "violen",
+    "suicide",  "bribe",  "rasuah",  "ditahan",
+    "fraud" ,  "SPRM",  "MACC",  "detain",  "misappropriation")
+
+imigr.key <- c("eludup", "rentas", "sempadan", "cross border", "confiscate",
+               "imigresen", "immigrant", "rampas", "pendatang asing")
+
+atm.key <- c("Angkatan Tentera Malaysia", "panglima", "ATM", "komander", "Malaysian Armed Forces",
+             "Armed Forces", " army", " navy ", "air force", "Hishammuddin Hussein",
+             "Tentera Darat", "Tentera Laut", "Tentera Udara", "UNIFIL", "TLDM", "TUDM",
+             "military", "soldier ", "rank and file", "regiment", "bekas tentera",
+             "brigade", "briged", "Malbatt", "menteri pertahanan", "Johari Baharum",
+             "perajurit", "PVATM", "bekas anggota tentera")
+
+pol.key <- c(" BN ", "UMNO", "Parti Islam Se-Malaysia", "MCA", "Pakatan Harapan", "PKR",
+             "MIC", "Parti Keadilan", "democratic action party", "Parti Pribumi Bersatu Malaysia",
+             "Parti Gerakan", "MYPPP", "Parti Bangsa Bersatu (PBB)", "Parlimen",
+             "SUPP", "Pertubuhan Pribumi Perkasa Malaysia", "Dewan Undangan Negeri",
+             "PBRS", "UPKO", "SPDP", "PRS", "PCM", " PAN ", "PAS ", "PBS", "DAP", "PPBM",
+             "Parti Amanah Nasional", "HINDRAF")
+
+pru.key <- c( "pilihan raya", "Suruhanjaya Pilihan Raya", "PRU", "daftar pemilih",
+              "voter", " Election Commission (EC)", "SPR ",
+              "general election", "undi pos", "postal vote")
+
+
+dstr.key <- c("banjir kilat", "flash flood", "fire", "kebakaran", "anging kencang",
+                  "tanah runtuh", "land slide", "heavy rain", "strong wind", "taufan",
+                  "typhoon","oil spill", "tumpahan minyak", "collide")
+
+if (daily.run) {
+  daily.run <- FALSE
+  save(file="daily.RData", kpi.data, daily.run)
+}
+```
+
+```{r Text Data Frame}
+
+# sapply(test.data$item, function(x) any(sapply(fruit, str_detect, string = x)))
+
+def.txt <- news.today %>%
+  mutate(text = paste(src, "**", headlines, "**",
+                      strtrim(article, 650),"... lagi >>", newslink, sep=":")) %>% 
+  # filter(str_detect(article, paste(def.key, collapse = '|' ))) %>% 
+  filter(sapply(news.today$article, function(x) any(sapply(def.key, stringr::str_detect, string = x)))) %>% 
+  select(text)
+
+crime.txt <- news.today %>%
+  mutate(text = paste(src, "**", headlines, "**",
+                      strtrim(article, 650),"... lagi >>", newslink, sep=":")) %>% 
+  filter(str_detect(text, paste(crime.key, collapse = '|' ))) %>% 
+  select(text)
+
+imigr.txt <- news.today %>%
+  mutate(text = paste(src, "**", headlines, "**",
+                      strtrim(article, 650),"... lagi >>", newslink, sep=":")) %>%
+  filter(str_detect(text, paste(imigr.key, collapse = '|' ))) %>% 
+  select(text) 
+
+atm.txt <- news.today %>%
+  mutate(text = paste(src, "**", headlines, "**",
+                      strtrim(article, 650),"... lagi >>", newslink, sep=":")) %>%
+  filter(str_detect(text, paste(atm.key, collapse = '|' ))) %>%  
+  select(text)
+
+pol.txt <- news.today %>%
+  mutate(text = paste(src, "**", headlines, "**",
+                      strtrim(article, 650),"... lagi >>", newslink, sep=":")) %>%
+  filter(str_detect(text, paste(pol.key, collapse = '|' ))) %>%  
+  select(text) 
+
+pru.txt <- news.today %>%
+  mutate(text = paste(src, "**", headlines, "**",
+                      strtrim(article, 650),"... lagi >>", newslink, sep=":")) %>%
+  filter(str_detect(text, paste(pru.key, collapse = '|' ))) %>%  
+  select(text) 
+
+dstr.txt <- news.today %>%
+  mutate(text = paste(src, "**", headlines, "**",
+                      strtrim(article, 650),"... lagi >>", newslink, sep=":")) %>%
+  filter(str_detect(text, paste(dstr.key, collapse = '|' ))) %>%  
+  select(text) 
+
+# Remove duplicate
+def.txt <- def.txt %>%
+  anti_join(crime.txt, imigr.txt, atm.txt, pol.txt, 
+            pru.txt, dstr.txt, by = "text")
+crime.txt <- crime.txt %>%
+  anti_join(def.txt, imigr.txt, atm.txt, pol.txt, 
+            pru.txt, dstr.txt, by = "text")
+imigr.txt <- imigr.txt  %>% 
+  anti_join(crime.txt, def.txt, atm.txt, pol.txt, 
+            pru.txt, dstr.txt, by = "text")
+atm.txt <- atm.txt %>%
+  anti_join(imigr.txt, def.txt, crime.txt, dstr.txt, 
+            pol.txt, pru.txt, by = "text")
+pol.txt <- pol.txt %>%
+  anti_join(imigr.txt, def.txt, crime.txt, dstr.txt, 
+            atm.txt, pru.txt, by = "text")
+pru.txt <- pru.txt %>%
+  anti_join(imigr.txt, def.txt, crime.txt, dstr.txt, 
+            atm.txt, pol.txt, by = "text")
+dstr.txt <- dstr.txt %>%
+  anti_join(imigr.txt, def.txt, crime.txt, atm.txt, 
+            pol.txt, pru.txt, by = "text")
+```
+
+```{r Tag Article, include=FALSE}
+
+x <- matrix(0, nrow = nrow(def.txt), ncol = 3)
+wx <- word.idx(def.txt, def.key)
+def.txt <- def.txt %>%
+  mutate(text = paste("**[Tag:", wx[,3], "]**", text))
+
+x <- matrix(0, nrow = nrow(crime.txt), ncol = 3)
+wx <- word.idx(crime.txt, crime.key)
+crime.txt <- crime.txt %>%
+  mutate(text = paste("**[Tag:", wx[,3], "]**", text))
+
+x <- matrix(0, nrow = nrow(imigr.txt), ncol = 3)
+wx <- word.idx(imigr.txt, imigr.key)
+imigr.txt <- imigr.txt %>%
+  mutate(text = paste("**[Tag:", wx[,3], "]**", text))
+
+x <- matrix(0, nrow = nrow(atm.txt), ncol = 3)
+wx <- word.idx(atm.txt, atm.key)
+atm.txt <- atm.txt %>%
+  mutate(text = paste("**[Tag:", wx[,3], "]**", text))
+
+x <- matrix(0, nrow = nrow(pol.txt), ncol = 3)
+wx <- word.idx(pol.txt, pol.key)
+pol.txt <- pol.txt %>%
+  mutate(text = paste("**[Tag:", wx[,3], "]**", text))
+
+x <- matrix(0, nrow = nrow(pru.txt), ncol = 3)
+wx <- word.idx(pru.txt, pru.key)
+pru.txt <- pru.txt %>%
+  mutate(text = paste("**[Tag:", wx[,3], "]**", text))
+
+x <- matrix(0, nrow = nrow(dstr.txt), ncol = 3)
+wx <- word.idx(dstr.txt, dstr.key)
+dstr.txt <- dstr.txt %>%
+  mutate(text = paste("**[Tag:", wx[,3], "]**", text))
+```
+
+# Artikel
+
+1. **Keselamatan: Dalam Negeri dan Serantau**
+
+```{r keselamatan, echo=FALSE, message=FALSE, warning=FALSE}
+
+def.txt[,1] %>% 
+  str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  kable(col.names = "") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+```
+
+**a. Jenayah**
+
+```{r jenayah, echo=FALSE, message=FALSE, warning=FALSE}
+
+# remove duplicate
+
+crime.txt[,1] %>% 
+  str_replace_all(pattern = "[[:cntrl:]]|googletag.cmd.push|googletag.display|
+                    function()|div-gpt-ad-1471855201557-0", "") %>%
+  str_trim(side = "both") %>% 
+  kable(col.names = "") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+
+```
+**b. Rentas Sempadan**
+
+```{r imigran, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+imigr.txt[,1] %>% 
+  str_replace_all(pattern = "[[:cntrl:]]|googletag.cmd.push|googletag.display|
+                    function()|div-gpt-ad-1471855201557-0", "") %>%
+  str_trim(side = "both") %>% 
+  kable(col.names = "") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+```
+
+c. **Bencana**
+
+```{r bencana, echo=FALSE, message=FALSE, warning=FALSE}
+
+dstr.txt[,1] %>% 
+  str_replace_all(pattern = "[[:cntrl:]]|googletag.cmd.push|googletag.display|
+                    function()|div-gpt-ad-1471855201557-0", "") %>%
+  str_trim(side = "both") %>% 
+  kable(col.names = "") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+```
+
+2. **Ketenteraan**
+
+```{r atm, echo=FALSE, message=FALSE, warning=FALSE}
+
+# remove duplicate
+atm.txt[,1] %>% 
+  str_replace_all(pattern = "[[:cntrl:]]|googletag.cmd.push|googletag.display|
+                    function()|div-gpt-ad-1471855201557-0", "") %>%
+  str_trim(side = "both") %>% 
+  kable(col.names = "") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+
+```
+
+3. **Politik**
+
+a. **Hal-ehwal Parti**
+
+```{r politik, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+pol.txt[,1] %>% 
+  str_replace_all(pattern = "[[:cntrl:]]|googletag.cmd.push|googletag.display|
+                    function()|div-gpt-ad-1471855201557-0", "") %>%
+  str_trim(side = "both") %>% 
+  kable(col.names = "") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+```
+b. **Pilihanraya**
+
+```{r pru, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+pru.txt[,1] %>% 
+  str_replace_all(pattern = "[[:cntrl:]]|googletag.cmd.push|googletag.display|
+                    function()|div-gpt-ad-1471855201557-0", "") %>%
+  str_trim(side = "both") %>% 
+  kable(col.names = "") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+```
+
+##Fakta Angka
+
+|Kategori Berita|Jumlah|
+|:--------------|:----:|
+|1. **Keselamatan: Dalam Negeri dan Serantau**|`r nrow(def.txt)`|
+|    a. **Jenayah**|`r nrow(crime.txt)`|
+|    b. **Rentas Sempadan**|`r nrow(imigr.txt)`|
+|    c. **Bencana**|`r nrow(dstr.txt)`|
+|2. **Ketenteraan**|`r nrow(atm.txt)`|
+|3. **Politik**||
+|    a. **Hal-ehwal Parti**|`r nrow(pol.txt)`|
+|    b. **Pilihanraya**|`r nrow(pru.txt)`|
+|**Jumlah**|`r nrow(def.txt)+nrow(crime.txt)+nrow(imigr.txt)+
+                          nrow(atm.txt)+nrow(pol.txt)+nrow(pru.txt)+nrow(dstr.txt)`

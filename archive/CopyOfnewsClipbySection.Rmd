@@ -1,0 +1,235 @@
+---
+title: "Petikan Kandungan Media"
+author: "BSPP Gerak Saraf, Tim ICT BPA-JRP"
+date: '`r format(Sys.time(),"%d %b %y %R",tz="Asia/Kuala_Lumpur")`'
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = NA, echo = FALSE)
+options(
+  knitr.kable.NA = '',
+  knitr.table.format = "html"
+  ) 
+```
+```{r initialise, include=FALSE}
+
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+load("daily.RData")
+load("newsdaily.RData") # from newsdailyBat.R
+load("newsDailyKPI.RData") # cat.key from newsDailyKPIVer2.R
+
+options(digits=2)
+
+```
+```{r Function word.tag, message=FALSE, warning=FALSE, include=FALSE}
+word.idx <- function(src.txt, src.key){
+  tag <- c("")
+  tx <- c("")
+  for(i in 1:nrow(src.txt)){
+    tx <- str_extract(src.txt[i,], paste(src.key, collapse = '|' )) # %>% na.omit()
+    try(
+      if (!is.na(tx)) {
+        tag[i] <- paste("**[Tag:", tx, "]**", src.txt[i,], collapse = "\\n")
+      }
+        else {
+          tag[i] <- paste("**[Tag:", tx, "]**", src.txt[i,], collapse = "\\n")
+      }
+    )
+  }
+  return(na.omit(tag))
+}
+# source("wordidx.R")
+```
+```{r definition, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
+if (daily.run) {
+  daily.run <- FALSE
+  save(file="daily.RData", kpi.data, daily.run)
+}
+```
+```{r Calc Sentiment, eval=FALSE, include=FALSE}
+read_chunk("newsSetmnt.R")
+
+```
+
+
+```{r Text Data Frame}
+
+def.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", "**[Tag ", tag,"]**",
+                      src, "**", headlines, "**", 
+                      strtrim(article, 700),"... lagi >>",
+                      newslink, sep=":")) %>% 
+  filter(kategori == "Keselamatan") %>% 
+  select(text)
+
+crime.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", "**[Tag ", tag,"]**",
+                      src, "**", headlines, "**", 
+                      strtrim(article, 700),"... lagi >>",
+                      newslink, sep=":")) %>% 
+  filter(kategori == "Jenayah") %>% 
+  select(text)
+
+imigr.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", "**[Tag ", tag,"]**",
+                      src, "**", headlines, "**", 
+                      strtrim(article, 700),"... lagi >>",
+                      newslink, sep=":")) %>% 
+  filter(kategori == "Imigran") %>% 
+  select(text)
+
+atm.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", "**[Tag ", tag,"]**",
+                      src, "**", headlines, "**", 
+                      strtrim(article, 700),"... lagi >>",
+                      newslink, sep=":")) %>% 
+  filter(kategori == "Ketenteraan") %>% 
+  select(text)
+
+pol.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", "**[Tag ", tag,"]**",
+                      src, "**", headlines, "**", 
+                      strtrim(article, 700),"... lagi >>",
+                      newslink, sep=":")) %>% 
+  filter(kategori == "Politik") %>% 
+  select(text) 
+
+soe.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", "**[Tag ", tag,"]**",
+                      src, "**", headlines, "**", 
+                      strtrim(article, 700),"... lagi >>",
+                      newslink, sep=":")) %>% 
+  filter(kategori == "Sosio-Ekonomi") %>% 
+  select(text)
+
+dstr.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", "**[Tag ", tag,"]**",
+                      src, "**", headlines, "**", 
+                      strtrim(article, 700),"... lagi >>",
+                      newslink, sep=":")) %>% 
+  filter(kategori == "Bencana") %>% 
+  select(text)
+
+fin.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", "**[Tag ", tag,"]**",
+                      src, "**", headlines, "**", 
+                      strtrim(article, 700),"... lagi >>",
+                      newslink, sep=":")) %>% 
+  filter(kategori == "Kewangan") %>% 
+  select(text)
+
+```
+
+<style type="text/css">
+.table {
+
+    width: 80%;
+
+}
+</style>
+
+# Artikel
+
+# Fakta Angka
+
+|Kategori Berita|Jumlah|Indeks|
+|:--------------|:----:|:----:|
+|1. Keselamatan: ||
+|    a. [Dalam Negeri dan Serantau](#dlmnegeri)|`r nrow(def.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Keselamatan")]`|
+|    b. [Jenayah](#Jenayah)|`r nrow(crime.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Jenayah")]`|
+|    c. [Rentas Sempadan](#rentas)|`r nrow(imigr.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Imigran")]`|
+|    d. [Bencana](#bencana)|`r nrow(dstr.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Bencana")]`|
+|2. [Ketenteraan](#ketenteraan)|`r nrow(atm.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Ketenteraan")]`|
+|3. [Politik](#politik)|`r nrow(pol.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Politik")]`|
+|4. [Sosial-Ekonomi](#sosial)|`r nrow(soe.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Sosio-Ekonomi")]`|
+|5. [Kewangan](#kewangan)|`r nrow(fin.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Kewangan")]`|
+|**Jumlah**|`r nrow(def.txt)+nrow(crime.txt)+nrow(imigr.txt)+
+                          nrow(atm.txt)+nrow(pol.txt)+nrow(soe.txt)+nrow(dstr.txt)`
+
+## Keselamatan Dalam Negeri dan Serantau <a id="dlmnegeri"></a>
+
+```{r keselamatan, echo=FALSE, message=FALSE, warning=FALSE}
+
+def.txt %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>%
+  # str_trim(side = "both") %>%
+  kable(col.names = "", row.names = NA)
+```
+
+### Jenayah <a id="Jenayah"></a>
+
+```{r jenayah, echo=FALSE, message=FALSE, warning=FALSE}
+
+# remove duplicate
+
+crime.txt %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>%
+  # str_trim(side = "both") %>%
+  kable(col.names = "", row.names = NA)
+```
+
+### Rentas Sempadan <a id="rentas"></a>
+
+```{r imigran, echo=FALSE, message=FALSE, warning=FALSE}
+
+imigr.txt %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  # str_trim(side = "both") %>% 
+  kable(col.names = "", row.names = NA)
+```
+
+### Bencana <a id="bencana"></a>
+
+```{r bencana, echo=FALSE, message=FALSE, warning=FALSE}
+
+dstr.txt %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  # str_trim(side = "both") %>% 
+  kable(col.names = "", row.names = NA)
+```
+
+## Ketenteraan <a id="ketenteraan"></a>
+
+```{r atm, echo=FALSE, message=FALSE, warning=FALSE}
+
+# remove duplicate
+atm.txt %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  # str_trim(side = "both") %>% 
+  kable(col.names = "", row.names = NA)
+
+```
+
+## Politik <a id="politik"></a>
+
+```{r politik, echo=FALSE, message=FALSE, warning=FALSE}
+
+pol.txt %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  # str_trim(side = "both") %>% 
+  kable(col.names = "", row.names = NA)
+```
+## Sosial dan Ekonomi <a id="sosial"></a>
+
+```{r soe, echo=FALSE, message=FALSE, warning=FALSE}
+
+soe.txt %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  # str_trim(side = "both") %>% 
+  kable(col.names = "", row.names = NA)
+```
+## Kewangan <a id="kewangan"></a>
+
+```{r fin, echo=FALSE, message=FALSE, warning=FALSE}
+
+fin.txt %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  # str_trim(side = "both") %>% 
+  kable(col.names = "", row.names = NA)
+```

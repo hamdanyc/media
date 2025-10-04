@@ -1,0 +1,16 @@
+dplyr
+lubridate
+kableExtra
+data.table
+RTextTools
+mongolite
+rvest
+readr
+shiny
+stringr
+tidyr
+tidytext
+RSelenium
+rmarkdown
+pandoc
+tm

@@ -1,0 +1,259 @@
+---
+title: "Petikan Kandungan Media"
+author: "BSPP Gerak Saraf, Tim ICT BPA-JRP"
+date: '`r format(Sys.time(), "%d %b %y, %H:%M")`'
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = NA, echo = FALSE)
+options(
+  knitr.kable.NA = '',
+  knitr.table.format = "html",
+  figcap.prefix = "Rajah", figcap.sep = ":",
+  figcap.prefix.highlight = "**",
+  tabcap.prefix = "Jadual", tabcap.sep = ":",
+  tabcap.prefix.highlight = "**"
+  ) 
+```
+```{r initialise, include=FALSE}
+
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(stringr)
+
+load("daily.RData")
+load("newsdaily.RData") # from newsdailyBat.R
+load("newsDailyKPI.RData") # cat.key from newsDailyKPIVer2.R
+
+options(digits=2)
+
+```
+```{r Function word.tag, message=FALSE, warning=FALSE, include=FALSE}
+word.idx <- function(src.txt, src.key){
+  tag <- c("")
+  tx <- c("")
+  for(i in 1:nrow(src.txt)){
+    tx <- str_extract(src.txt[i,], paste(src.key, collapse = '|' )) # %>% na.omit()
+    try(
+      if (!is.na(tx)) {
+        tag[i] <- paste("**[Tag:", tx, "]**", src.txt[i,], collapse = "\\n")
+      }
+        else {
+          tag[i] <- paste("**[Tag:", tx, "]**", src.txt[i,], collapse = "\\n")
+      }
+    )
+  }
+  return(na.omit(tag))
+}
+# source("wordidx.R")
+```
+```{r definition, message=FALSE, warning=FALSE, include=FALSE}
+
+if (daily.run) {
+  daily.run <- FALSE
+  save(file="daily.RData", kpi.data, daily.run)
+}
+```
+```{r Calc Sentiment, eval=FALSE, include=FALSE}
+read_chunk("newsSetmnt.R")
+
+```
+
+
+```{r Text Data Frame}
+
+def.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", src, "**", headlines, "**", 
+                      strtrim(article, 700),"... lagi >>", newslink, sep=":")) %>% 
+  filter(kategori == "Keselamatan") %>% 
+  select(text)
+
+crime.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", src, "**", headlines, "**", 
+                      strtrim(article, 700),"... lagi >>", newslink, sep=":")) %>% 
+  filter(kategori == "Jenayah") %>%  
+  select(text)
+
+imigr.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", src, "**", headlines, "**", 
+                      strtrim(article, 700),"... lagi >>", newslink, sep=":")) %>%
+  filter(kategori == "Imigran") %>% 
+  select(text) 
+
+atm.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", src, "**", headlines, "**",
+                      strtrim(article, 700),"... lagi >>", newslink, sep=":")) %>%
+  filter(kategori == "Ketenteraan") %>%   
+  select(text)
+
+pol.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", src, "**", headlines, "**",
+                      strtrim(article, 700),"... lagi >>", newslink, sep=":")) %>%
+  filter(kategori == "Politik") %>% 
+  select(text) 
+
+pru.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", src, "**", headlines, "**",
+                      strtrim(article, 700),"... lagi >>", newslink, sep=":")) %>%
+  filter(kategori == "Pilihan Raya") %>%  
+  select(text) 
+
+dstr.txt <- cat.key %>%
+  mutate(text = paste("**[Indeks ", sentiment, "]**", src, "**", headlines, "**",
+                      strtrim(article, 700),"... lagi >>", newslink, sep=":")) %>%
+  filter(kategori == "Bencana") %>%  
+  select(text) 
+
+```
+
+```{r Tag Article, include=FALSE}
+dstr.tag <- c("")
+def.tag <- as.data.frame(word.idx(def.txt, def.key), stringsAsFactors = F) %>% 
+  na.omit(def.tag)
+crime.tag <- as.data.frame(word.idx(crime.txt, crime.key), stringsAsFactors = F) %>% 
+  na.omit(crime.tag)
+dstr.tag <- as.data.frame(word.idx(dstr.txt, dstr.key), stringsAsFactors = F) %>% 
+  na.omit(dstr.tag)
+imigr.tag <- as.data.frame(word.idx(imigr.txt, imigr.key), stringsAsFactors = F) %>% 
+  na.omit(imigr.tag)
+atm.tag <- as.data.frame(word.idx(atm.txt, atm.key), stringsAsFactors = F) %>% 
+  na.omit(atm.tag)
+pol.tag <- as.data.frame(word.idx(pol.txt, pol.key), stringsAsFactors = F) %>% 
+  na.omit(pol.tag)
+pru.tag <- as.data.frame(word.idx(pru.txt, pru.key), stringsAsFactors = F) %>% 
+  na.omit(pru.tag)
+```
+
+# Artikel
+
+## 1. **Keselamatan: Dalam Negeri dan Serantau**
+
+```{r keselamatan, echo=FALSE, message=FALSE, warning=FALSE}
+
+def.tag[,1] %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>%
+  # str_trim(side = "both") %>%
+  kable(col.names = "", row.names = NA) %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+```
+
+## **a. Jenayah**
+
+```{r jenayah, echo=FALSE, message=FALSE, warning=FALSE}
+
+# remove duplicate
+
+crime.tag[,1] %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>%
+  # str_trim(side = "both") %>%
+  kable(col.names = "", row.names = NA) %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+
+```
+## **b. Rentas Sempadan**
+
+```{r imigran, echo=FALSE, message=FALSE, warning=FALSE}
+
+imigr.tag[,1] %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  # str_trim(side = "both") %>% 
+  kable(col.names = "", row.names = NA) %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+```
+
+## c. **Bencana**
+
+```{r bencana, echo=FALSE, message=FALSE, warning=FALSE}
+
+dstr.tag[,1] %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  # str_trim(side = "both") %>% 
+  kable(col.names = "", row.names = NA) %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+```
+
+## 2. **Ketenteraan**
+
+```{r atm, echo=FALSE, message=FALSE, warning=FALSE}
+
+# remove duplicate
+atm.tag[,1] %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  # str_trim(side = "both") %>% 
+  kable(col.names = "", row.names = NA) %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+
+```
+
+## 3. **Politik**
+
+a. **Hal-ehwal Parti**
+
+```{r politik, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+pol.tag[,1] %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  # str_trim(side = "both") %>% 
+  kable(col.names = "", row.names = NA) %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+```
+b. **Sosial**
+
+```{r pru, echo=FALSE, message=FALSE, warning=FALSE}
+
+pru.tag[,1] %>% 
+  # str_replace_all(pattern = "[[:cntrl:]]", "") %>% 
+  # str_trim(side = "both") %>% 
+  kable(col.names = "", row.names = NA) %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = F,
+    position = "left"
+  )
+```
+
+# Fakta Angka
+
+|Kategori Berita|Jumlah|Indeks|
+|:--------------|:----:|:----:|
+|1. **Keselamatan**: ||
+|    a. **Dalam Negeri dan Serantau**|`r nrow(def.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Keselamatan")]`|
+|    b. **Jenayah**|`r nrow(crime.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Jenayah")]`|
+|    c. **Rentas Sempadan**|`r nrow(imigr.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Imigran")]`|
+|    d. **Bencana**|`r nrow(dstr.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Bencana")]`|
+|2. **Ketenteraan**|`r nrow(atm.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Ketenteraan")]`|
+|3. **Politik**||
+|    a. **Hal-ehwal Parti**|`r nrow(pol.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Politik")]`|
+|    b. **Sosial**|`r nrow(pru.txt)`|`r daily.kpi$indeks[which(daily.kpi$kategori=="Pilihan Raya")]`|
+|**Jumlah**|`r nrow(def.txt)+nrow(crime.txt)+nrow(imigr.txt)+
+                          nrow(atm.txt)+nrow(pol.txt)+nrow(pru.txt)+nrow(dstr.txt)`
+
