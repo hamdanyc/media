@@ -27,6 +27,12 @@ content = '''thenews <- c("airtimes",
              "theRakyatPost",
              "thesundaily",
              "umnoonline",
+             "agendadaily",
+             "beritaharian",
+             "hmetro",
+             "nst",
+             "thestar",
+             "astroawani"
              "utusan")'''
 
 lines = content.splitlines()
@@ -50,7 +56,8 @@ for line in lines:
 active_files = [f"{name}.R" for name in thenews_content]
 
 # Add explicitly sourced files
-active_files += ['news_rs_part.R', 'newsadddb_mongo.R']
+active_files += ['news_rs_part.R', 'newsadddb_mongo.R', 'newsadddb_mongo.R','newsClipbySection.Rmd',
+                    'newsBatch.R','newsdt_mgsum.R', '']
 
 # Get all .R files in the current directory, excluding the archive folder
 all_r_files = []
