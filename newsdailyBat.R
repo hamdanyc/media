@@ -13,7 +13,7 @@
 #  1.  newsdailyBat.R
 #  2.  newsAnalysis.R -- daily analysis report, export daily kpi
 #  3.  newsRptClipbySection.Rmd -- news clip
-#  newsRpt.Rmd -- daily stat report
+# newsRpt.Rmd -- daily stat report
 
 # init -----
 library(dplyr)
@@ -38,48 +38,65 @@ news.my <- c("agendadaily","amanahdaily","airtimes","antarapos","astroawani","am
              "bernama", "harakah", "hmetro", "keadilandaily", "kosmo", "malaysiadateline",
              "roketkini", "sinarharian","sarawakvoice", "umnoonline", "utusan")
 
-# merge data frame ----
-e <- function(x){
-  if (exists (x)) {
+# Function to process news data
+e <- function(x) {
+  if (exists(x)) {
     df <- get(x)
     
-    # set category 
-    # identify tag/category ----
-    # predict 
-    data <- df
-    n <- nrow(df)
-    pred_mat <- create_matrix(data$article, originalMatrix = matrix, removeNumbers=TRUE,
-                              stemWords=FALSE, weighting=tm::weightTfIdf)
-    pred_cont <- create_container(pred_mat,labels = rep("",n), testSize = 1:n, virgin=FALSE)
-    pred_df <- classify_model(pred_cont,model)
-
-    df <- mutate(df,kategori = pred_df$SVM_LABEL)
-    
-    # calc sentiment ----
-    positive <- 0
-    negative <- 0
-    
-    ifelse(df$src %in% news.my,
-           tb <- df %>%
-             tidytext::unnest_tokens(word,article) %>%
-             inner_join(binmy) %>%
-             group_by(headlines) %>%
-             count(sentiment) %>%
-             tidyr::spread(sentiment, n, fill = 0) %>%
-             mutate(sentiment = positive - negative, tag = "")
-           ,
-           tb <- df %>%
-             tidytext::unnest_tokens(word,article) %>%
-             inner_join(tidytext::get_sentiments("bing")) %>%
-             group_by(headlines) %>%
-             count(sentiment) %>%
-             tidyr::spread(sentiment, n, fill = 0) %>%
-             mutate(sentiment = positive - negative, tag = "")
-    )
-
-    df <- df %>%
-      dplyr::left_join(tb,by = "headlines")
+    # Predict category 
+    # Identify tag/category ----
+    tryCatch({
+      data <- df
+      n <- nrow(df)
+      
+      # Create term-document matrix for classification
+      pred_mat <- create_matrix(data$article, 
+                                originalMatrix = matrix, 
+                                removeNumbers = TRUE,
+                                stemWords = FALSE, 
+                                weighting = tm::weightTfIdf)
+      
+      pred_cont <- create_container(pred_mat,
+                                  labels = rep("", n),
+                                  testSize = 1:n, 
+                                  virgin = FALSE)
+      
+      pred_df <- classify_model(pred_cont, model)
+      
+      df <- mutate(df, kategori = pred_df$SVM_LABEL)
+      
+      # Calculate sentiment ----
+      positive <- 0
+      negative <- 0
+      
+      if (df$src %in% news.my) {
+        tb <- df %>%
+          tidytext::unnest_tokens(word, article) %>%
+          inner_join(binmy, by = "word", relationship = "many-to-many") %>%
+          group_by(headlines) %>%
+          count(sentiment) %>%
+          tidyr::spread(sentiment, n, fill = 0) %>%
+          mutate(sentiment = positive - negative, tag = "")
+      } else {
+        tb <- df %>%
+          tidytext::unnest_tokens(word, article) %>%
+          inner_join(tidytext::get_sentiments("bing"), by = "word", relationship = "many-to-many") %>%
+          group_by(headlines) %>%
+          count(sentiment) %>%
+          tidyr::spread(sentiment, n, fill = 0) %>%
+          mutate(sentiment = positive - negative, tag = "")
+      }
+      
+      df <- df %>%
+        dplyr::left_join(tb, by = "headlines")
+      
+      return(df)
+    }, error = function(e) {
+      message("Error processing ", x, ": ", e$message)
+      return(NULL)
+    })
   }
+  return(NULL)
 }
 
 # news part I ----
@@ -103,41 +120,39 @@ thenews <- c("airtimes",
              "sarawakvoice", 
              "sinarharian",
              "theAseanPost",
-             "themalaymailonline",
              "theRakyatPost",
              "thesundaily",
              "umnoonline",
              "utusan")
 
 list.news <- c("agendadaily.df",
-             "airtimes.df",
-             "astroawani.df",
-             "beritaharian.df",
-             "bernama.df",
-             "borneopost.df",
-             "dailyexpress.df", 
-             "fmt.df",
-             "harakah.df",
-             "hmetro.df",
-             "kosmo.df",
-             "malaysiakini.df", 
-             "malaysiainsight.df",
-             "newsarawaktribune.df",
-             "nst.df",
-             "roketkini.df",
-             "sarawakvoice.df", 
-             "sinarharian.df",
-             "theAseanPost.df",
-             "theedge.df",
-             "themalaymailonline.df",
-             "therakyatpost.df", 
-             "thestar.df",
-             "thesundaily.df",
-             "umnoonline.df",
-             "utusan.df")
+               "airtimes.df",
+               "astroawani.df",
+               "beritaharian.df",
+               "bernama.df",
+               "borneopost.df",
+               "fmt.df",
+               "harakah.df",
+               "hmetro.df",
+               "kosmo.df",
+               "malaysiakini.df", 
+               "malaysiainsight.df",
+               "newsarawaktribune.df",
+               "nst.df",
+               "roketkini.df",
+               "sarawakvoice.df", 
+               "sinarharian.df",
+               "theAseanPost.df",
+               "theedge.df",
+               "themalaymailonline.df",
+               "therakyatpost.df", 
+               "thestar.df",
+               "thesundaily.df",
+               "umnoonline.df",
+               "utusan.df")
 n <- 0
 for (i in thenews) {
-  cat(i,fill = TRUE,sep = " ")
+  cat(i, fill = TRUE, sep = " ")
   try(source(paste0(i,".R")),
       silent=TRUE)
 }
@@ -146,12 +161,10 @@ for (i in thenews) {
 try(source("news_rs_part.R"),silent = TRUE)
 
 # Media clean up, and news.today ----
-try(silent=TRUE,
-  news.list <- lapply(list.news, e),
-  news.today <- data.table::rbindlist(news.list,fill = TRUE) %>% distinct(),
-  news.today <- news.today %>% 
-    dplyr::anti_join(news.last)
-)
+try(news.list <- lapply(list.news, e), silent=TRUE)
+try(news.today <- data.table::rbindlist(news.list,fill = TRUE) %>% distinct(), silent=TRUE)
+try(news.today <- news.today %>% 
+    dplyr::anti_join(news.last), silent=TRUE)
 
 if(nrow(news.today) > 0){
   
