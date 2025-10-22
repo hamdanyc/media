@@ -66,29 +66,59 @@ e <- function(x) {
       df <- mutate(df, kategori = pred_df$SVM_LABEL)
       
       # Calculate sentiment ----
-      positive <- 0
-      negative <- 0
-      
-      if (df$src %in% news.my) {
-        tb <- df %>%
-          tidytext::unnest_tokens(word, article) %>%
-          inner_join(binmy, by = "word", relationship = "many-to-many") %>%
-          group_by(headlines) %>%
-          count(sentiment) %>%
-          tidyr::spread(sentiment, n, fill = 0) %>%
-          mutate(sentiment = positive - negative, tag = "")
-      } else {
-        tb <- df %>%
-          tidytext::unnest_tokens(word, article) %>%
-          inner_join(tidytext::get_sentiments("bing"), by = "word", relationship = "many-to-many") %>%
-          group_by(headlines) %>%
-          count(sentiment) %>%
-          tidyr::spread(sentiment, n, fill = 0) %>%
-          mutate(sentiment = positive - negative, tag = "")
+      if (nrow(df) == 0) {
+        return(df)
       }
       
-      df <- df %>%
-        dplyr::left_join(tb, by = "headlines")
+      # Check if all src values are the same
+      if (length(unique(df$src)) == 1) {
+        src <- df$src[1]
+        
+        if (src %in% news.my) {
+          tb <- df %>%
+            tidytext::unnest_tokens(word, article) %>%
+            inner_join(binmy, by = "word", relationship = "many-to-many", multiple = "first") %>%
+            group_by(headlines) %>%
+            count(sentiment) %>%
+            tidyr::spread(sentiment, n, fill = 0) %>%
+            mutate(sentiment = positive - negative, tag = "")
+        } else {
+          tb <- df %>%
+            tidytext::unnest_tokens(word, article) %>%
+            inner_join(tidytext::get_sentiments("bing"), by = "word", relationship = "many-to-many") %>%
+            group_by(headlines) %>%
+            count(sentiment) %>%
+            tidyr::spread(sentiment, n, fill = 0) %>%
+            mutate(sentiment = positive - negative, tag = "")
+        }
+        
+        df <- df %>%
+          dplyr::left_join(tb, by = "headlines")
+      } else {
+        # Handle multiple sources
+        df <- df %>%
+          group_by(src) %>%
+          do({
+            if (.$src[1] %in% news.my) {
+              tb <- . %>%
+                tidytext::unnest_tokens(word, article) %>%
+                inner_join(binmy, by = "word", multiple = "first") %>%
+                group_by(headlines) %>%
+                count(sentiment) %>%
+                tidyr::spread(sentiment, n, fill = 0) %>%
+                mutate(sentiment = positive - negative, tag = "")
+            } else {
+              tb <- . %>%
+                tidytext::unnest_tokens(word, article) %>%
+                inner_join(tidytext::get_sentiments("bing"), by = "word", relationship = "many-to-many") %>%
+                group_by(headlines) %>%
+                count(sentiment) %>%
+                tidyr::spread(sentiment, n, fill = 0) %>%
+                mutate(sentiment = positive - negative, tag = "")
+            }
+          }) %>%
+          ungroup()
+      }
       
       return(df)
     }, error = function(e) {
