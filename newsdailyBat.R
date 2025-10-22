@@ -146,10 +146,12 @@ for (i in thenews) {
 try(source("news_rs_part.R"),silent = TRUE)
 
 # Media clean up, and news.today ----
-news.list <- lapply(list.news, e)
-news.today <- data.table::rbindlist(news.list,fill = TRUE) %>% distinct()
-news.today <- news.today %>% 
-  dplyr::anti_join(news.last)
+try (
+  news.list <- lapply(list.news, e),
+  news.today <- data.table::rbindlist(news.list,fill = TRUE) %>% distinct(),
+  news.today <- news.today %>% 
+    dplyr::anti_join(news.last)
+)
 
 if(nrow(news.today) > 0){
   
