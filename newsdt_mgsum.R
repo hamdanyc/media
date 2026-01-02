@@ -19,7 +19,14 @@ db <- mongo(collection="media", db="news", url=uri)
 
 # query today news ----
 # res <- db$find(fields = '{"datePub": 1}')
-res <- db$find('{"datePub": {"$regex": "2025"}}', fields = '{"datePub": 1}')
+current_year <- format(Sys.Date(), "%Y")
+# Use sprintf to bake the year variable into the JSON string
+query_string <- sprintf('{"datePub": {"$regex": "^%s"}}', current_year)
+res <- db$find(
+  query = query_string,
+  fields = '{"datePub": 1}'
+)
+
 res$pub <- as.Date(res$datePub)
 df <- data.table::as.data.table(res)
 
